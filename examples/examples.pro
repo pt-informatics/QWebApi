@@ -1,10 +1,8 @@
-QT += core
-QT -= gui
+QT += core gui widgets
 
 include(../src/qwebapi.pri)
 
 TARGET = examples
-CONFIG += console
 CONFIG -= app_bundle
 
 HEADERS += \

@@ -10,25 +10,22 @@
 #include <string.h>
 #include "picohttpparser.h"
 
-RestApi::RestApi(QObject *parent)
+
+
+RestApi::RestApi(QObject *parent){
+    RestApi(QHostAddress::Any, 0, parent);
+}
+
+RestApi::RestApi(QHostAddress address, qint16 port, QObject *parent)
     : AbstractApi(parent), _tcpServer(Q_NULLPTR), _networkSession(0)
 {
     _tcpServer=new QTcpServer(this);
-    if(!_tcpServer->listen()){
+    if(!_tcpServer->listen(address, port)){
         qCritical() << "Failed to start listening!";
         return;
     }
 
-    QString ipAddress;
-    QList<QHostAddress> ipList=QNetworkInterface::allAddresses();
-    QHostAddress ip;
-    foreach(ip, ipList){
-        if(ip==QHostAddress::LocalHost) continue;
-        if(!ip.toIPv4Address()) continue;
-        ipAddress=ip.toString();
-    }
-    if(ipAddress.isEmpty()) ipAddress=QHostAddress(QHostAddress::LocalHost).toString();
-    qDebug() << "IP Address:" << ipAddress << _tcpServer->serverPort();
+    qDebug() << "REST:" << _tcpServer->serverAddress() << _tcpServer->serverPort();
 
     connect(_tcpServer, SIGNAL(newConnection()), SLOT(_newConnection()));
 }

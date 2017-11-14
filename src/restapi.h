@@ -2,6 +2,7 @@
 #define WEBAPI_H
 
 #include <QObject>
+#include <QHostAddress>
 
 #include "abstractapi.h"
 
@@ -12,7 +13,8 @@ class RestApi : public AbstractApi
 {
     Q_OBJECT
 public:
-    explicit RestApi(QObject *parent = 0);
+    RestApi(QObject *parent=0);
+    RestApi(QHostAddress address, qint16 port, QObject* parent=0);
 
 private slots:
     void _newConnection();

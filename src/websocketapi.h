@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QHostAddress>
 
 #include "abstractapi.h"
 
@@ -31,7 +32,8 @@ public:
         {INTERNAL_ERROR, "Internal JSON-RPC error."},
     };
 
-    explicit WebSocketApi(QObject *parent=0);
+    WebSocketApi(QObject *parent=0);
+    WebSocketApi(QHostAddress address, qint16 port, QObject *parent=0);
     ~WebSocketApi();
 
 signals:

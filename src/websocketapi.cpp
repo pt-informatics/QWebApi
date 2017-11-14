@@ -9,16 +9,20 @@
 
 #include <QDebug>
 
-WebSocketApi::WebSocketApi(QObject *parent)
+WebSocketApi::WebSocketApi(QObject *parent){
+    WebSocketApi(QHostAddress::Any, 0, parent);
+}
+
+WebSocketApi::WebSocketApi(QHostAddress address, qint16 port, QObject *parent)
     : AbstractApi(parent),
       _socketServer(new QWebSocketServer("WebSocketApi", QWebSocketServer::NonSecureMode, this))
 {
-    if(!_socketServer->listen()){
+    if(!_socketServer->listen(address, port)){
         qCritical() << "Failed to start listening";
         return;
     }
 
-    qDebug() << _socketServer->serverAddress() << _socketServer->serverPort();
+    qDebug() << "WebSocket:" << _socketServer->serverAddress() << _socketServer->serverPort();
 
     connect(_socketServer, SIGNAL(newConnection()), SLOT(_newConnection()));
     connect(_socketServer, SIGNAL(closed()), SIGNAL(closed()));
@@ -40,7 +44,6 @@ void WebSocketApi::_newConnection(){
 
 void WebSocketApi::_processText(QString message){
     QWebSocket *socket=dynamic_cast<QWebSocket*>(sender());
-    qDebug() << "Text Message:" << message;
     socket->sendTextMessage(_parseMessage(message));
 }
 
