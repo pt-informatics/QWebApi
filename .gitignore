@@ -1,6 +1,8 @@
 clients/browser/typescript/rpc.js
 build/
 .qmake.stash
+docs/html/
+docs/latex/
 
 # C++ objects and libs
 

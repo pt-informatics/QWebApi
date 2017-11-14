@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+/// @private
 class HttpServer : public QObject
 {
     Q_OBJECT
