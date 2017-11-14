@@ -148,3 +148,13 @@ If a property defined a NOTIFY signal, then a message will be sent whenever this
 ```
 
 A TypeScript RPC library is included in the 'clients/browser/typescript' folder along with an example HTML page.
+
+## Documentation
+Rudimentary documentation is provided via Doxygen. To generate the documentation, ensure Doxygen is installed then run the following:
+
+```sh
+$ cd /path/to/qwebapi/docs
+$ doxygen Doxyfile
+```
+
+This will create a folder of HTML documentation named 'html'. Browser into this folder and open 'index.html'.
