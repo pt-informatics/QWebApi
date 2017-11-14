@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WebSocket API Test Page</title>
+		<script type="text/javascript" src="./rpc.js"></script>
+		<script type="text/javascript">
+			var rpc=new RPC.RPC();
+			
+			var socket=null;
+			function initWebSocket(){
+				var wsAddr=document.getElementById("wsAddr").value;
+				try {
+					socket=new WebSocket(wsAddr);
+					socket.onmessage=(event)=>{ rpc.messageHandler(event.data); };
+					socket.onerror=(event)=>{ console.error("Error:"+error.message); };
+					socket.onclose=(event)=>{
+						if(event.wasClean) console.info("Connecion close was clean");
+						else console.error("Connection was suddenly closed");
+						console.info('Close code: '+event.code+", reason: "+event.reason);
+					};
+
+					rpc.toStream=function(message){ socket.send(message); }
+
+					rpc.on("TestClass.valueChanged", (value)=>{
+							console.log("Value changed: "+value);
+							document.getElementById("recvValue").value=value;
+						}
+					);
+
+					socket.onopen=()=>{
+						rpc.call("TestClass.value").then((result)=>{
+							console.log("RPC Result: "+result);
+						});
+					};
+
+				} catch(exception){ console.log("Exception: "+exception); }
+			}
+
+			function stopWebSocket(){
+				if(webSocket) webSocket.close();
+			}
+
+			function sendValue(){
+				var value=document.getElementById("sendValue").value;
+				rpc.call("TestClass.value", parseInt(value)).then((result)=>{
+					console.log("RPC Result: "+result);
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<h1>WebSocketAPI Test Page</h1>
+		<p>
+			<input id="wsAddr" type="text" value="ws://10.128.151.251:54191"><br>
+			<button onClick="initWebSocket();">Connect</button><br>
+			<input id="sendValue" type="number" value="1"><br>
+			<button onClick="sendValue();">Send</button><br>
+			<input id="recvValue" type="number" value="" readonly><br>
+			<button onClick="stopWebSocket();">Disconnect</button>
+		</p>
+	</body>
+</html>
