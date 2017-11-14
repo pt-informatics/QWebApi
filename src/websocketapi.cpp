@@ -31,7 +31,6 @@ WebSocketApi::~WebSocketApi(){
 }
 
 void WebSocketApi::_newConnection(){
-    qDebug() << "New Connection";
     QWebSocket *socket=_socketServer->nextPendingConnection();
     connect(socket, SIGNAL(textMessageReceived(QString)), SLOT(_processText(QString)));
     connect(socket, SIGNAL(binaryMessageReceived(QByteArray)), SLOT(_processBinary(QByteArray)));
@@ -114,7 +113,7 @@ QString WebSocketApi::_toError(JsonRpcError error, int id){
 
 QString WebSocketApi::_toResponse(QVariant result, int id){
     QJsonObject jresponse;
-    jresponse["jsonrpc"]=2.0;
+    jresponse["jsonrpc"]="2.0";
     jresponse["id"]=id;
 
     if(result.type()==QVariant::String) jresponse["result"]=result.toString();
