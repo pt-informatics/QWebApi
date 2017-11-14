@@ -1,104 +1,104 @@
 module RPC {
 
-	interface Message {
-		jsonrpc: string;
-		id: number;
-	}
+    interface Message {
+        jsonrpc: string;
+        id: number;
+    }
 
-	interface MessageRequest extends Message {
-		method: string;
-		params?: any
-	}
+    interface MessageRequest extends Message {
+        method: string;
+        params?: any
+    }
 
-	interface MessageError extends Message {
-		error: {
-			code: number;
-			message: string;
-		}
-	}
+    interface MessageError extends Message {
+        error: {
+            code: number;
+            message: string;
+        }
+    }
 
-	// Utility
-	function isUndefined(value: any): boolean { return value===undefined; }
+    // Utility
+    function isUndefined(value: any): boolean { return value===undefined; }
 
-	let isArray=Array.isArray;
+    let isArray=Array.isArray;
 
-	function isObject(value: any): boolean {
-		let type=typeof value;
-		return value!=null && (type==='object' || type==='function');
-	}
+    function isObject(value: any): boolean {
+        let type=typeof value;
+        return value!=null && (type==='object' || type==='function');
+    }
 
-	function isFunction(value: any): boolean { return typeof value==='function'; }
+    function isFunction(value: any): boolean { return typeof value==='function'; }
 
-	function isString(value: any): boolean { return typeof value==='string'; }
+    function isString(value: any): boolean { return typeof value==='string'; }
 
-	function isEmpty(value: any): boolean {
-		if(isObject(value)){
-			for(let idx in value){
-				if(value.hasOwnProperty(idx)) return false;
-			}
-			return true;
-		}
-		else if(isArray(value)) return !value.length;
-		return !value;
-	}
+    function isEmpty(value: any): boolean {
+        if(isObject(value)){
+            for(let idx in value){
+                if(value.hasOwnProperty(idx)) return false;
+            }
+            return true;
+        }
+        else if(isArray(value)) return !value.length;
+        return !value;
+    }
 
-	function forEach(target: any, callback: any){
-		if(isArray(target)) return target.map(callback);
-		for(let key in target){
-			if(target.hasOwnProperty(key)) callback(target[key]);
-		}
-	}
+    function forEach(target: any, callback: any){
+        if(isArray(target)) return target.map(callback);
+        for(let key in target){
+            if(target.hasOwnProperty(key)) callback(target[key]);
+        }
+    }
 
-	function clone(value: object): object { return JSON.parse(JSON.stringify(value)); }
+    function clone(value: object): object { return JSON.parse(JSON.stringify(value)); }
 
-	// RPC Class
-	export class RPC {
-		static ERRORS: {
-	        "PARSE_ERROR": {
-	            "code": -32700,
-	            "message": "Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text."
-	        },
-	        "INVALID_REQUEST": {
-	            "code": -32600,
-	            "message": "Invalid Request. The JSON sent is not a valid Request object."
-	        },
-	        "METHOD_NOT_FOUND": {
-	            "code": -32601,
-	            "message": "Method not found. The method does not exist / is not available."
-	        },
-	        "INVALID_PARAMS": {
-	            "code": -32602,
-	            "message": "Invalid params. Invalid method parameter(s)."
-	        },
-	        "INTERNAL_ERROR": {
-	            "code": -32603,
-	            "message": "Internal error. Internal JSON-RPC error."
-	        }
-	    };
+    // RPC Class
+    export class RPC {
+        static ERRORS: {
+            "PARSE_ERROR": {
+                "code": -32700,
+                "message": "Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text."
+            },
+            "INVALID_REQUEST": {
+                "code": -32600,
+                "message": "Invalid Request. The JSON sent is not a valid Request object."
+            },
+            "METHOD_NOT_FOUND": {
+                "code": -32601,
+                "message": "Method not found. The method does not exist / is not available."
+            },
+            "INVALID_PARAMS": {
+                "code": -32602,
+                "message": "Invalid params. Invalid method parameter(s)."
+            },
+            "INTERNAL_ERROR": {
+                "code": -32603,
+                "message": "Internal error. Internal JSON-RPC error."
+            }
+        };
 
-	    ServerError=class extends Error {
-	    	code: number;
-	    	data: object;
+        ServerError=class extends Error {
+            code: number;
+            data: object;
 
-	    	constructor(code: number, message: string, data?: any){
-	    		super();
-	    		this.message=message || "";
-	    		this.code=code || -32000;
-	    		if(Boolean(data)) this.data=data;
-	    	}
-	    }
+            constructor(code: number, message: string, data?: any){
+                super();
+                this.message=message || "";
+                this.code=code || -32000;
+                if(Boolean(data)) this.data=data;
+            }
+        }
 
-		_address: string;
-		_socket: WebSocket;
+        _address: string;
+        _socket: WebSocket;
 
-		_waitingFrame: object={}
-		_id: number=0;
-		_dispatcher: object={}
+        _waitingFrame: object={}
+        _id: number=0;
+        _dispatcher: object={}
 
-		constructor(){}
+        constructor(){}
 
-		_setError(rpcError, exception?){
-			let error=clone(rpcError);
+        _setError(rpcError, exception?){
+            let error=clone(rpcError);
 
             if(!!exception){
                 if(isObject(exception) && exception.hasOwnProperty("message")){
@@ -422,5 +422,5 @@ module RPC {
         customException(code, message, data){
             return new this.ServerError(code, message, data);
         };
-	}
+    }
 }
