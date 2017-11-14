@@ -1,3 +1,7 @@
+clients/browser/typescript/rpc.js
+build/
+.qmake.stash
+
 # C++ objects and libs
 
 *.slo
