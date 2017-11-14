@@ -14,7 +14,7 @@ It has been tested with the following configurations:
 ## Implementation
 There is a minimal example project in the 'examples' folder which covers the following:
 
-1. Add `include (/path/to/qwebapi/src/qwebapi.pri)` to you .pro file
+1. Add `include (/path/to/qwebapi/src/qwebapi.pri)` to your .pro file
 2. Ensure the class you wish to expose extends `Q_OBJECT` and uses `Q_PROPERTY` to decorate the desired properties. For example:
 
 **testclass.h**
@@ -147,4 +147,4 @@ If a property defined a NOTIFY signal, then a message will be sent whenever this
 }
 ```
 
-An TypeScript RPC library is included in the 'clients/browser/typescript' folder along with an example HTML page.
+A TypeScript RPC library is included in the 'clients/browser/typescript' folder along with an example HTML page.
